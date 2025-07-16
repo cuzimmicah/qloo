@@ -9,8 +9,7 @@ from shared.models import (
     TimeSlot, Event, EventRequest, UserContext, CalendarProvider,
     EventStatus, UserPreferences
 )
-from calendar.google_api import GoogleCalendarAPI
-from calendar.outlook_api import OutlookAPI
+from .google_api import GoogleCalendarAPI
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +18,6 @@ class Scheduler:
     
     def __init__(self):
         self.google_calendar = GoogleCalendarAPI()
-        self.outlook_calendar = OutlookAPI()
         self.min_slot_duration = 15  # Minimum slot duration in minutes
         self.max_suggestions = 10  # Maximum number of suggestions to return
         
@@ -86,12 +84,6 @@ class Scheduler:
                 start_date.isoformat(), end_date.isoformat()
             )
             all_events.extend(google_events)
-            
-            # Get events from Outlook Calendar
-            outlook_events = await self.outlook_calendar.get_events(
-                start_date.isoformat(), end_date.isoformat()
-            )
-            all_events.extend(outlook_events)
             
             # Add events from user context if available
             if user_context and user_context.existing_events:
@@ -317,8 +309,6 @@ class Scheduler:
             
             if calendar_provider == "google":
                 created_event = await self.google_calendar.create_event(event_data)
-            elif calendar_provider == "outlook":
-                created_event = await self.outlook_calendar.create_event(event_data)
             else:
                 raise ValueError(f"Unsupported calendar provider: {calendar_provider}")
             
@@ -338,8 +328,6 @@ class Scheduler:
         try:
             if calendar_provider == "google":
                 updated_event = await self.google_calendar.update_event(event_id, updates)
-            elif calendar_provider == "outlook":
-                updated_event = await self.outlook_calendar.update_event(event_id, updates)
             else:
                 raise ValueError(f"Unsupported calendar provider: {calendar_provider}")
             
@@ -358,8 +346,6 @@ class Scheduler:
         try:
             if calendar_provider == "google":
                 success = await self.google_calendar.cancel_event(event_id)
-            elif calendar_provider == "outlook":
-                success = await self.outlook_calendar.cancel_event(event_id)
             else:
                 raise ValueError(f"Unsupported calendar provider: {calendar_provider}")
             
@@ -412,8 +398,6 @@ class Scheduler:
             # Get the original event
             if calendar_provider == "google":
                 original_event = await self.google_calendar.get_event(event_id)
-            elif calendar_provider == "outlook":
-                original_event = await self.outlook_calendar.get_event(event_id)
             else:
                 raise ValueError(f"Unsupported calendar provider: {calendar_provider}")
             

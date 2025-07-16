@@ -34,12 +34,14 @@ def setup_environment():
     # Create environment file template
     env_template = """# Qloo Backend Environment Variables
 OPENAI_API_KEY=your_openai_key_here
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-MICROSOFT_CLIENT_ID=your_microsoft_client_id
-MICROSOFT_CLIENT_SECRET=your_microsoft_client_secret
+GOOGLE_CREDENTIALS_FILE=credentials.json
+GOOGLE_TOKEN_FILE=token.json
 ELEVENLABS_API_KEY=your_elevenlabs_key
-DATABASE_URL=sqlite:///./qloo.db
+ELEVENLABS_DEFAULT_VOICE=21m00Tcm4TlvDq8ikWAM
+SUPABASE_URL=your_supabase_project_url_here
+SUPABASE_KEY=your_supabase_anon_key_here
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key_here
+DATABASE_URL=postgresql+asyncpg://postgres:[password]@db.[project-ref].supabase.co:5432/postgres
 SECRET_KEY=your_secret_key_here
 """
     

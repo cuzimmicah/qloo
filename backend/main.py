@@ -1,3 +1,6 @@
+from dotenv import load_dotenv
+load_dotenv()  # Load environment variables from .env file
+
 from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -14,11 +17,11 @@ from shared.models import (
     HealthResponse, UserContext
 )
 from nlp.intent_parser import IntentParser
-from calendar.scheduler import Scheduler
-from calendar.google_api import GoogleCalendarAPI
-from calendar.outlook_api import OutlookAPI
+from scheduling.scheduler import Scheduler
+from scheduling.google_api import GoogleCalendarAPI
 from voice.transcribe import VoiceTranscriber
 from tts.elevenlabs import TextToSpeech
+from database import supabase_client
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -44,7 +47,6 @@ app.add_middleware(
 intent_parser = IntentParser()
 scheduler = Scheduler()
 google_calendar = GoogleCalendarAPI()
-outlook_calendar = OutlookAPI()
 voice_transcriber = VoiceTranscriber()
 text_to_speech = TextToSpeech()
 
@@ -148,8 +150,6 @@ async def get_events(
     try:
         if calendar_provider == "google":
             events = await google_calendar.get_events(start_date, end_date)
-        elif calendar_provider == "outlook":
-            events = await outlook_calendar.get_events(start_date, end_date)
         else:
             raise HTTPException(status_code=400, detail="Unsupported calendar provider")
         
@@ -168,9 +168,7 @@ async def sync_calendar(request: CalendarSyncRequest):
             google_result = await google_calendar.sync()
             sync_results.append({"provider": "google", "status": "success", "events_synced": google_result})
         
-        if "outlook" in request.providers:
-            outlook_result = await outlook_calendar.sync()
-            sync_results.append({"provider": "outlook", "status": "success", "events_synced": outlook_result})
+
         
         return CalendarSyncResponse(
             sync_results=sync_results,

@@ -4,7 +4,7 @@ from unittest.mock import Mock, patch, AsyncMock
 from datetime import datetime, timedelta, time, date
 import pytz
 
-from calendar.scheduler import Scheduler
+from ..scheduling.scheduler import Scheduler
 from shared.models import (
     TimeSlot, Event, EventRequest, UserContext, UserPreferences,
     CalendarProvider, EventStatus
@@ -587,28 +587,16 @@ class TestScheduler:
             )
         ]
         
-        mock_outlook_events = [
-            Event(
-                event_id="outlook_event",
-                title="Outlook Event",
-                start_time=datetime(2024, 1, 15, 14, 0, 0),
-                end_time=datetime(2024, 1, 15, 15, 0, 0),
-                calendar_provider=CalendarProvider.OUTLOOK,
-                status=EventStatus.SCHEDULED
-            )
-        ]
         
         with patch.object(scheduler.google_calendar, 'get_events', return_value=mock_google_events):
-            with patch.object(scheduler.outlook_calendar, 'get_events', return_value=mock_outlook_events):
-                events = await scheduler._get_existing_events(
-                    start_date=date(2024, 1, 15),
-                    end_date=date(2024, 1, 15),
-                    user_context=sample_user_context
-                )
-                
-                assert len(events) == 2
-                assert events[0].calendar_provider == CalendarProvider.GOOGLE
-                assert events[1].calendar_provider == CalendarProvider.OUTLOOK
+            events = await scheduler._get_existing_events(
+                start_date=date(2024, 1, 15),
+                end_date=date(2024, 1, 15),
+                user_context=sample_user_context
+            )
+            
+            assert len(events) == 1
+            assert events[0].calendar_provider == CalendarProvider.GOOGLE
     
     @pytest.mark.asyncio
     async def test_error_handling(self, scheduler):

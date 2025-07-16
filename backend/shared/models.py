@@ -17,7 +17,6 @@ class IntentType(str, Enum):
 class CalendarProvider(str, Enum):
     """Supported calendar providers"""
     GOOGLE = "google"
-    OUTLOOK = "outlook"
     APPLE = "apple"
     ICAL = "ical"
 
