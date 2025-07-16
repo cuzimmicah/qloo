@@ -1,0 +1,38 @@
+{
+  "agent": {
+    "enabled": true,
+    "continuous_mode": true,
+    "max_iterations": 100,
+    "auto_test": true,
+    "auto_fix": true,
+    "focus_areas": [
+      "main.py",
+      "shared/models.py",
+      "nlp/intent_parser.py",
+      "calendar/scheduler.py",
+      "voice/transcribe.py",
+      "tests/"
+    ],
+    "goals": [
+      "Implement complete FastAPI backend for voice scheduling",
+      "Create comprehensive test suite",
+      "Ensure mobile app compatibility",
+      "Implement voice processing pipeline",
+      "Add calendar integrations"
+    ],
+    "test_command": "python -m pytest tests/ -v --cov=.",
+    "run_command": "python main.py",
+    "dependencies": [
+      "fastapi",
+      "uvicorn",
+      "openai",
+      "pydantic",
+      "google-api-python-client",
+      "microsoft-graph-auth",
+      "speech-recognition",
+      "elevenlabs",
+      "pytest",
+      "pytest-cov"
+    ]
+  }
+}

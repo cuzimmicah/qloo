@@ -1,0 +1,1 @@
+# Whisper integration for voice-to-text 

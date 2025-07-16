@@ -1,0 +1,1 @@
+# Shared constants across backend and mobile 
