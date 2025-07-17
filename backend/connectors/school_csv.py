@@ -1,1 +1,0 @@
-# School CSV connector - MCP source 
