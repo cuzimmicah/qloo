@@ -1,1 +1,0 @@
-# Aggregated schedule time blocks 

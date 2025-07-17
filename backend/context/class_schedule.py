@@ -1,1 +1,0 @@
-# CSV/ICS-based class schedule 
